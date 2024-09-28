@@ -1,7 +1,18 @@
-/*
-    home.css: This website contains selectors only used in home.css
+.rectangle {
+  border: 2px solid black;
+  border-radius: 10px;
+  width: 100%;
 
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
+  font-size: 24px;
+}
+
+.rectangle-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rectangle-wrapper {
+  gap: 25px;
+  display: flex;
+  flex-direction: column;
+}
