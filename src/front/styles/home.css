@@ -6,6 +6,14 @@
   font-size: 24px;
 }
 
+.red-border {
+  border: 2px solid red;
+}
+
+.green-border {
+  border: 2px solid green;
+}
+
 .rectangle-row {
   display: flex;
   justify-content: space-between;

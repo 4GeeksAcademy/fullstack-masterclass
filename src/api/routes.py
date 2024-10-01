@@ -18,7 +18,17 @@ def fetch_users():
 
     serialized_users = []
     for user in users:
-        serialized_users.append(user.serialize())
+        serialized_user = user.serialize()
+        todos_of_an_user = Todo.query.filter(Todo.user_id == serialized_user["id"]).all()
+        serialized_user["total_todos"] = len(todos_of_an_user)
+        serialized_user["completed_todos"] = 0
+
+        for todo in todos_of_an_user:
+            serialized_todo = todo.serialize()
+            if serialized_todo["completed"] == True:
+                serialized_user["completed_todos"] += 1
+
+        serialized_users.append(serialized_user)
 
     return jsonify(serialized_users)
 
@@ -42,7 +52,12 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return f"New user with id: {new_user.id} created"
+    serialized_new_user = new_user.serialize()
+
+    serialized_new_user["total_todos"] = 0
+    serialized_new_user["completed_todos"] = 0
+
+    return jsonify(serialized_new_user)
 
 @api.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -52,6 +67,13 @@ def delete_user(user_id):
     db.session.commit()
 
     return f"Deleting user with id: {user_id}"
+
+@api.route('/users/<int:user_id>', methods=['GET'])
+def fetch_user(user_id):
+    user = User.query.get(user_id)
+    serialized_user = user.serialize()
+
+    return jsonify(serialized_user)
 #-------------------------------------------------------
 
 #TODOS endpoints
@@ -75,7 +97,7 @@ def create_todo():
     db.session.add(new_todo)
     db.session.commit()
 
-    return f"New todo with id: {new_todo.id} created"
+    return jsonify(new_todo.serialize())
 
 @api.route('/todos/<int:todo_id>', methods=['PUT'])
 def update_todo(todo_id):

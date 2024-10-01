@@ -13,13 +13,13 @@ class User(db.Model):
             "name": self.name,
             "quote": self.quote,
         }
-    
+
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(120), unique=False, nullable=False)
     completed = db.Column(db.Boolean(), unique=False, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False,)
+    
     def serialize(self):
         return {
             "id": self.id,
