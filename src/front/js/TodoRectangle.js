@@ -9,7 +9,14 @@ function TodoRectangle({ content, isCompleted, onTodoClick, onTodoDelete }) {
     >
       <div className="rectangle-row">
         <div>{content}</div>
-        <div onClick={onTodoDelete}>X</div>
+        <div
+          onClick={(event) => {
+            event.stopPropagation();
+            onTodoDelete();
+          }}
+        >
+          X
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import TodoRectangle from "./TodoRectangle";
 import { useParams } from "react-router-dom";
-import { addNewTodo, fetchTodos, removeTodo } from "./store/actions";
+import {
+  addNewTodo,
+  fetchTodos,
+  removeTodo,
+  updateTodo,
+} from "./store/actions";
+import { AppContext } from "./store/AppProvider";
+import { selectUserDetails } from "./store/selectors";
 
 function UsersDetails() {
   const [newTodo, setNewTodo] = useState("");
@@ -9,14 +16,14 @@ function UsersDetails() {
 
   const { state, dispatch } = useContext(AppContext);
 
-  const user = useMemo(() => selectUserDetails(state), []);
+  const user = selectUserDetails(state, userId);
 
   useEffect(() => {
-    fetchTodos(dispatch);
+    fetchTodos(dispatch, userId);
   }, []);
 
   const switchTodoCompletedStatus = async (todoId, todoCompletedStatus) => {
-    await updateTodo(dispatch, todoId, { complete: !todoCompletedStatus });
+    await updateTodo(dispatch, todoId, { completed: !todoCompletedStatus });
   };
 
   const handleOnNewTodoInputChange = (event) => {
@@ -33,7 +40,7 @@ function UsersDetails() {
 
   return (
     <div>
-      <h2>{`You are currently reading ${user.name} Todos`}</h2>
+      <h2>{`You are currently reading ${user?.name} Todos`}</h2>
       <input
         type="text"
         value={newTodo}
@@ -42,13 +49,13 @@ function UsersDetails() {
       <button onClick={onAddTodoButtonClick}>Add Todo</button>
       {state.todos.map((todo) => (
         <TodoRectangle
-          onTodoClick={() => {
-            switchTodoCompletedStatus(todo.id, todo.completed);
+          onTodoClick={async () => {
+            await switchTodoCompletedStatus(todo.id, todo.completed);
           }}
           content={todo.content}
           isCompleted={todo.completed}
-          onTodoDelete={() => {
-            onTodoDelete(todo.id);
+          onTodoDelete={async () => {
+            await onTodoDelete(todo.id);
           }}
         />
       ))}

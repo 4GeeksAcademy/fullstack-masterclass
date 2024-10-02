@@ -1,12 +1,25 @@
 import React from "react";
 import "../styles/home.css";
 
-function UserRectangle({ name, quote, todosAmount, onUserClick }) {
+function UserRectangle({
+  name,
+  quote,
+  todosAmount,
+  onUserClick,
+  onUserDelete,
+}) {
   return (
     <div className="rectangle" onClick={onUserClick}>
       <div className="rectangle-row">
         <div>{name}</div>
-        <div>X</div>
+        <div
+          onClick={(event) => {
+            event.stopPropagation();
+            onUserDelete();
+          }}
+        >
+          X
+        </div>
       </div>
       <div className="rectangle-row">
         <div>{quote}</div>

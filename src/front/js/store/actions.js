@@ -2,7 +2,9 @@ import {
   createNewTodoService,
   createNewUserService,
   fetchTodosService,
+  fetchUsersService,
   removeTodoService,
+  removeUserService,
   updateTodoService,
 } from "../service";
 import { REDUCER_ACTION_TYPES } from "./actions.const";
@@ -24,7 +26,7 @@ export const addNewUser = async (dispatch, newUser) => {
     const translatedResponse = await createNewUserService(newUser);
 
     dispatch({
-      type: REDUCER_ACTION_TYPES.USERS.FETCH,
+      type: REDUCER_ACTION_TYPES.USERS.ADD,
       payload: translatedResponse,
     });
   } catch (error) {
@@ -32,9 +34,22 @@ export const addNewUser = async (dispatch, newUser) => {
   }
 };
 
-export const fetchTodos = async (dispatch) => {
+export const removeUser = async (dispatch, userId) => {
   try {
-    const translatedResponse = await fetchTodosService();
+    await removeUserService(userId);
+
+    dispatch({
+      type: REDUCER_ACTION_TYPES.USERS.REMOVE,
+      payload: userId,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const fetchTodos = async (dispatch, userId) => {
+  try {
+    const translatedResponse = await fetchTodosService(userId);
 
     dispatch({
       type: REDUCER_ACTION_TYPES.TODOS.FETCH,
@@ -77,7 +92,10 @@ export const updateTodo = async (dispatch, todoId, payload) => {
 
     dispatch({
       type: REDUCER_ACTION_TYPES.TODOS.UPDATE,
-      payload,
+      payload: {
+        id: todoId,
+        ...payload,
+      },
     });
   } catch (error) {
     console.error(error);

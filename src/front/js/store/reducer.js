@@ -14,6 +14,12 @@ export const AppReducer = (state, action) => {
         users: [...state.users, action.payload],
       };
 
+    case REDUCER_ACTION_TYPES.USERS.REMOVE:
+      return {
+        ...state,
+        users: state.users.filter((user) => user.id !== action.payload),
+      };
+
     case REDUCER_ACTION_TYPES.TODOS.FETCH:
       return {
         ...state,

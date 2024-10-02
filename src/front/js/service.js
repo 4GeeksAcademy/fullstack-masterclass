@@ -8,10 +8,7 @@ export const fetchUsersService = async () => {
 export const createNewUserService = async (newUser) => {
   const rawResponse = await fetch(`${process.env.BACKEND_URL}/api/users`, {
     method: "POST",
-    body: JSON.stringify({
-      name: newUser.name,
-      quote: newUser.quote,
-    }),
+    body: JSON.stringify(newUser),
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -20,7 +17,13 @@ export const createNewUserService = async (newUser) => {
   return await rawResponse.json();
 };
 
-export const fetchTodosService = async () => {
+export const removeUserService = async (userId) => {
+  await fetch(`${process.env.BACKEND_URL}/api/users/${userId}`, {
+    method: "DELETE",
+  });
+};
+
+export const fetchTodosService = async (userId) => {
   const rawResponse = await fetch(
     `${process.env.BACKEND_URL}/api/users/${userId}/todos`,
     { method: "GET" }

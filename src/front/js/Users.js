@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserRectangle from "./UserRectangle";
 import "../styles/home.css";
 import { useNavigate } from "react-router-dom";
-import { addNewUser, fetchUsers } from "./store/actions";
+import { addNewUser, fetchUsers, removeUser } from "./store/actions";
 import { AppContext } from "./store/AppProvider";
 
 function Users() {
@@ -10,6 +10,7 @@ function Users() {
   const navigate = useNavigate();
 
   const { state, dispatch } = useContext(AppContext);
+  console.log(state);
 
   useEffect(() => {
     fetchUsers(dispatch);
@@ -25,6 +26,10 @@ function Users() {
 
   const onAddTodoButtonClick = async () => {
     await addNewUser(dispatch, newUser);
+  };
+
+  const onUserDelete = async (userId) => {
+    await removeUser(dispatch, userId);
   };
 
   return (
@@ -57,6 +62,9 @@ function Users() {
             }}
             onUserClick={() => {
               goToUserDetails(user.id);
+            }}
+            onUserDelete={async () => {
+              await onUserDelete(user.id);
             }}
           />
         ))}
