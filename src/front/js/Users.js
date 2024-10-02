@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserRectangle from "./UserRectangle";
 import "../styles/home.css";
 import { useNavigate } from "react-router-dom";
+import { addNewUser, fetchUsers } from "./store/actions";
+import { AppContext } from "./store/AppProvider";
 
 function Users() {
-  const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: "", quote: "" });
   const navigate = useNavigate();
 
+  const { state, dispatch } = useContext(AppContext);
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const rawResponse = await fetch(
-          `${process.env.BACKEND_URL}/api/users`,
-          { method: "GET" }
-        );
-        const translatedResponse = await rawResponse.json();
-
-        setUsers(translatedResponse);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUsers();
+    fetchUsers(dispatch);
   }, []);
 
   const goToUserDetails = (userId) => {
@@ -35,25 +24,7 @@ function Users() {
   };
 
   const onAddTodoButtonClick = async () => {
-    try {
-      const rawResponse = await fetch(`${process.env.BACKEND_URL}/api/users`, {
-        method: "POST",
-        body: JSON.stringify({
-          name: newUser.name,
-          quote: newUser.quote,
-        }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const translatedResponse = await rawResponse.json();
-
-      const newUsers = [...users, translatedResponse];
-      setUsers(newUsers);
-    } catch (error) {
-      console.error(error);
-    }
+    await addNewUser(dispatch, newUser);
   };
 
   return (
@@ -76,7 +47,7 @@ function Users() {
       />
       <button onClick={onAddTodoButtonClick}>Add User</button>
       <div className="rectangle-wrapper">
-        {users.map((user) => (
+        {state.users.map((user) => (
           <UserRectangle
             name={user.name}
             quote={user.quote}

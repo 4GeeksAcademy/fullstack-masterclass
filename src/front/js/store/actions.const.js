@@ -1,0 +1,13 @@
+export const REDUCER_ACTION_TYPES = {
+  USERS: {
+    ADD: "USERS__ADD",
+    REMOVE: "USERS__REMOVE",
+    FETCH: "USERS__FETCH",
+  },
+  TODOS: {
+    ADD: "TODOS__ADD",
+    REMOVE: "TODOS__REMOVE",
+    UPDATE: "TODOS__UPDATE",
+    FETCH: "TODOS__FETCH",
+  },
+};
